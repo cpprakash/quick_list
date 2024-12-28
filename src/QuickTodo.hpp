@@ -1,9 +1,9 @@
 #ifndef __HEADER_QUICKTODO__
 #define __HEADER_QUICKTODO__
 
-class QucikTodo {
+class QuickTodo {
 public:
-  QucikTodo();
+  QuickTodo();
   void add_a_task(void);
   void delete_a_task(void);
   void delete_all_tasks(void);

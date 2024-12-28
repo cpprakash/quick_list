@@ -1,9 +1,9 @@
 #include "QuickTodo.hpp"
 
-QucikTodo::QucikTodo() {}
+QuickTodo::QuickTodo() {}
 
-void QucikTodo::add_a_task(void) {}
+void QuickTodo::add_a_task(void) {}
 
-void QucikTodo::delete_a_task(void) {}
+void QuickTodo::delete_a_task(void) {}
 
-void QucikTodo::delete_all_tasks(void) {}
+void QuickTodo::delete_all_tasks(void) {}
