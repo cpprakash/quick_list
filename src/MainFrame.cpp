@@ -38,8 +38,8 @@ void MainFrame::create_gui_controls(void) {
 
 void MainFrame::load_todos_from_file_at_program_start(void) {
   QuickTodo todo;
-  std::vector<QuickTodo> _todo = todo.get_all_todos("tasks.txt");
-  for (auto todo : _todo) {
+  todos = todo.get_all_todos("tasks.txt");
+  for (auto todo : todos) {
     display_todos->Insert(todo.get_title(), display_todos->GetCount());
   }
 }
