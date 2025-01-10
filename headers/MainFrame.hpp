@@ -28,6 +28,7 @@ private:
   void on_clear_todos_button_click(wxCommandEvent &event);
   void on_main_window_close(wxCloseEvent &event);
   void create_gui_controls(void);
+  void load_todos_from_file_at_program_start(void);
 };
 
 #endif

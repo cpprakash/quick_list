@@ -120,6 +120,7 @@ std::vector<QuickTodo> QuickTodo::read_text_file(const std::string &file_name) {
         todos.push_back(QuickTodo{id, title, completed, description});
       }
     }
+    std::cout << "Size of todo = " << todos.size() << std::endl;
     return todos;
 
   } else {

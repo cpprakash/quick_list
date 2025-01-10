@@ -31,8 +31,18 @@ void MainFrame::create_gui_controls(void) {
                             wxSize(100, 40));
   display_todos =
       new wxCheckListBox(panel, wxID_ANY, wxPoint(100, 220), wxSize(600, 350));
+  load_todos_from_file_at_program_start();
   button_clear_todos = new wxButton(panel, wxID_ANY, "Clear TODOs",
                                     wxPoint(100, 580), wxSize(100, 40));
+}
+
+void MainFrame::load_todos_from_file_at_program_start(void) {
+  QuickTodo todo;
+  std::vector<QuickTodo> _todo = todo.get_all_todos("tasks.txt");
+  for (auto todo : _todo) {
+    std::cout << "Adding to the list " << todo.get_title() << std::endl;
+    display_todos->Insert(todo.get_title(), display_todos->GetCount());
+  }
 }
 
 void MainFrame::on_add_todo_button_click(wxCommandEvent &event) {
