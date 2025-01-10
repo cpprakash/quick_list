@@ -1,4 +1,4 @@
-#include "QuickTodo.hpp"
+#include "../headers/QuickTodo.hpp"
 
 #include <algorithm>
 #include <filesystem>
@@ -12,8 +12,8 @@ QuickTodo::QuickTodo() : m_size{0}, m_title{""}, m_completed{false} {}
 
 QuickTodo::QuickTodo(const unsigned int id, const std::string &title,
                      const bool completed, const std::string &description)
-    : m_size{0}, m_id{id}, m_title{title}, m_completed{completed},
-      m_description{description} {}
+    : m_id{id}, m_size{0}, m_title{title}, m_description{description},
+      m_completed{completed} {}
 // ********************** Constructor ******************************
 
 // ********************** Public Methods ******************************
@@ -32,7 +32,7 @@ void QuickTodo::write_todos_on_disk(const std::string &file_name,
   } else {
     todo_file << todo.size() << std::endl;
     todo_file.close();
-    for (auto i = 0; i < todo.size(); i++) {
+    for (std::size_t i = 0; i < todo.size(); i++) {
       this->add_a_todo(file_name, todo[i]);
     }
   }
@@ -82,7 +82,7 @@ std::vector<QuickTodo> read_binary_file(const std::string &file_name) {
       unsigned char todo_size[1];
       todo_file.read(reinterpret_cast<char *>(todo_size), sizeof(todo_size));
       std::cout << "total number of todos are " << todo_size << std::endl;
-      if (todo_size == 0) {
+      if (todo_size[0] == 0) {
         std::cout << "No todos at the moment. Please add one." << std::endl;
         // return;
       } else { // there is atleast one todo
@@ -91,6 +91,8 @@ std::vector<QuickTodo> read_binary_file(const std::string &file_name) {
   } else {
     std::cout << "File doesnt exists!" << std::endl;
   }
+  // TODO remove it
+  return std::vector<QuickTodo>();
 }
 /**
  * Read the text file
@@ -104,9 +106,9 @@ std::vector<QuickTodo> QuickTodo::read_text_file(const std::string &file_name) {
     istream >> total_todos;
 
     if (total_todos > 0) {
-      for (auto i = 0; i < total_todos; i++) {
+      for (unsigned int i = 0; i < total_todos; i++) {
         unsigned int id;
-        unsigned int completed;
+        bool completed;
         std::string title;
         std::string description;
         istream >> id;

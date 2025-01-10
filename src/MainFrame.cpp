@@ -2,8 +2,8 @@
 #include <string>
 #include <vector>
 
-#include "MainFrame.hpp"
-#include "QuickTodo.hpp"
+#include "../headers/MainFrame.hpp"
+#include "../headers/QuickTodo.hpp"
 
 MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "TODO Quick List") {
   create_gui_controls();

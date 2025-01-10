@@ -1,6 +1,6 @@
-#include "MainApp.hpp"
-#include "MainFrame.hpp"
-#include "QuickTodo.hpp"
+#include "../headers/MainApp.hpp"
+#include "../headers/MainFrame.hpp"
+#include "../headers/QuickTodo.hpp"
 
 #include <vector>
 

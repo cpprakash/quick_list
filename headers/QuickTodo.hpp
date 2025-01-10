@@ -7,10 +7,10 @@
 class QuickTodo {
 private:
   unsigned int m_id;
+  unsigned int m_size;
   std::string m_title;
   std::string m_description;
   bool m_completed;
-  unsigned int m_size;
 
 public:
   QuickTodo();
