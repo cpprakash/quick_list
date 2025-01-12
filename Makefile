@@ -15,7 +15,7 @@ quick_list:QuickTodo.o MainFrame.o MainApp.o
 	$(PROJECT) build/MainFrame.o build/MainApp.o build/QuickTodo.o $(WX_WIDGET)
 
 QuickTodo.o: src/QuickTodo.cpp headers/QuickTodo.hpp
-	$(COMPILER) $(WX_WIDGET) -o build/QuickTodo.o -c src/QuickTodo.cpp
+	$(COMPILER) $(COMPILER_VERSION) $(COMPILER_OPTIONS) $(WX_WIDGET) -o build/QuickTodo.o -c src/QuickTodo.cpp
 
 MainFrame.o: src/MainFrame.cpp headers/MainFrame.hpp
 	$(COMPILER) $(COMPILER_VERSION) $(COMPILER_OPTIONS) $(WX_WIDGET) -o build/MainFrame.o -c src/MainFrame.cpp
