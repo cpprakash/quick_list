@@ -46,6 +46,13 @@ std::vector<QuickTodo> QuickTodo::get_all_todos(const std::string &file_name) {
   return this->read_text_file(file_name);
 }
 
+void QuickTodo::update_task_completed_field(const unsigned int index,
+                                            const bool value) {
+  this->get_title();
+  std::cout << this->get_title() << std::endl;
+  this->m_completed = value;
+}
+
 // ********************** Private Methods ******************************
 
 void QuickTodo::add_a_todo(const std::string &file_name,

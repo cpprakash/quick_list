@@ -86,11 +86,14 @@ void MainFrame::on_main_window_close(wxCloseEvent &event) {
 void MainFrame::on_todo_checklistbox_checked(wxCommandEvent &event) {
   std::cout << "Hola amigos" << std::endl;
   std::cout << event.GetInt() << std::endl;
+
   if (display_todos->IsChecked(event.GetInt())) {
     std::cout << "Item at index " << event.GetInt() << " is been checked."
               << std::endl;
+    todos[event.GetInt()].update_task_completed_field(event.GetInt(), true);
   } else {
     std::cout << "Item at index " << event.GetInt() << " is been unchecked."
               << std::endl;
+    todos[event.GetInt()].update_task_completed_field(event.GetInt(), false);
   }
 }

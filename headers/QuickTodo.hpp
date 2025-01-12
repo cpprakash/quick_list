@@ -24,6 +24,7 @@ public:
   void delete_a_todo(void);
   void delete_all_todos(const std::string &file_name);
   std::vector<QuickTodo> get_all_todos(const std::string &file_name);
+  void update_task_completed_field(const unsigned int index, const bool value);
 
 private:
   void add_a_todo(const std::string &file_name, const QuickTodo &todo);
