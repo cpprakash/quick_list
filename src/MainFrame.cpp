@@ -10,6 +10,8 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "TODO Quick List") {
   button_add->Bind(wxEVT_BUTTON, &MainFrame::on_add_todo_button_click, this);
   button_clear_todos->Bind(wxEVT_BUTTON,
                            &MainFrame::on_clear_todos_button_click, this);
+  display_todos->Bind(wxEVT_CHECKLISTBOX,
+                      &MainFrame::on_todo_checklistbox_checked, this);
 
   this->Bind(wxEVT_CLOSE_WINDOW, &MainFrame::on_main_window_close, this);
   CreateStatusBar();
@@ -79,4 +81,16 @@ void MainFrame::on_main_window_close(wxCloseEvent &event) {
   QuickTodo to_do;
   to_do.write_todos_on_disk("tasks.txt", todos);
   event.Skip();
+}
+
+void MainFrame::on_todo_checklistbox_checked(wxCommandEvent &event) {
+  std::cout << "Hola amigos" << std::endl;
+  std::cout << event.GetInt() << std::endl;
+  if (display_todos->IsChecked(event.GetInt())) {
+    std::cout << "Item at index " << event.GetInt() << " is been checked."
+              << std::endl;
+  } else {
+    std::cout << "Item at index " << event.GetInt() << " is been unchecked."
+              << std::endl;
+  }
 }

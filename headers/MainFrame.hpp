@@ -29,6 +29,7 @@ private:
   void on_main_window_close(wxCloseEvent &event);
   void create_gui_controls(void);
   void load_todos_from_file_at_program_start(void);
+  void on_todo_checklistbox_checked(wxCommandEvent &event);
 };
 
 #endif
