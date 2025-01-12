@@ -41,8 +41,12 @@ void MainFrame::create_gui_controls(void) {
 void MainFrame::load_todos_from_file_at_program_start(void) {
   QuickTodo todo;
   todos = todo.get_all_todos("tasks.txt");
-  for (auto todo : todos) {
-    display_todos->Insert(todo.get_title(), display_todos->GetCount());
+  for (unsigned int i = 0; i < todos.size(); i++) { // auto todo : todos) {
+    display_todos->Insert(todos[i].get_title(), display_todos->GetCount());
+    std::cout << todos[i].get_completed() << std::endl;
+    if (todos[i].get_completed() == true) {
+      display_todos->Check(i, true);
+    }
   }
 }
 
