@@ -21,6 +21,9 @@ QuickTodo::QuickTodo(const unsigned int id, const std::string &title,
 const std::string &QuickTodo::get_title(void) { return this->m_title; }
 const bool QuickTodo::get_completed(void) { return this->m_completed; }
 const unsigned int QuickTodo::get_size(void) { return this->m_size; }
+const std::string &QuickTodo::get_description(void) {
+  return this->m_description;
+}
 
 void QuickTodo::write_todos_on_disk(const std::string &file_name,
                                     const std::vector<QuickTodo> todo) {

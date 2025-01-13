@@ -10,6 +10,8 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "TODO Quick List") {
   button_add->Bind(wxEVT_BUTTON, &MainFrame::on_add_todo_button_click, this);
   button_clear_todos->Bind(wxEVT_BUTTON,
                            &MainFrame::on_clear_todos_button_click, this);
+  display_todos->Bind(wxEVT_LEFT_UP,
+                      &MainFrame::on_todo_checklist_mouse_selected, this);
   display_todos->Bind(wxEVT_CHECKLISTBOX,
                       &MainFrame::on_todo_checklistbox_checked, this);
 
@@ -28,11 +30,20 @@ void MainFrame::create_gui_controls(void) {
       new wxTextCtrl(panel, wxID_ANY, "", wxPoint(100, 80), wxSize(600, 35));
 
   input_description =
-      new wxTextCtrl(panel, wxID_ANY, "", wxPoint(100, 125), wxSize(600, 35));
+      new wxTextCtrl(panel, wxID_ANY, "", wxPoint(100, 125), wxSize(600, 35),
+                     wxTE_READONLY || wxTE_MULTILINE || wxTE_RICH || wxHSCROLL);
   button_add = new wxButton(panel, wxID_ANY, "Add TODO", wxPoint(100, 170),
                             wxSize(100, 40));
   display_todos =
-      new wxCheckListBox(panel, wxID_ANY, wxPoint(100, 220), wxSize(600, 350));
+      new wxCheckListBox(panel, wxID_ANY, wxPoint(100, 220), wxSize(200, 350));
+
+  /** adding two static texts to display the info about selected todo */
+  display_title = new wxStaticText(
+      panel, wxID_ANY, "Title: ", wxPoint(320, 220), wxSize(100, 40));
+  display_description = new wxStaticText(
+      panel, wxID_ANY, "Description: ", wxPoint(320, 320), wxSize(100, 300),
+      wxTE_READONLY || wxTE_MULTILINE || wxTE_RICH || wxHSCROLL);
+
   load_todos_from_file_at_program_start();
   button_clear_todos = new wxButton(panel, wxID_ANY, "Clear TODOs",
                                     wxPoint(100, 580), wxSize(100, 40));
@@ -83,16 +94,36 @@ void MainFrame::on_clear_todos_button_click(wxCommandEvent &event) {
   }
 }
 
+/***
+ * Event gets fired when the window is closing
+ * this is where we write the tasks to the disk in the file
+ */
 void MainFrame::on_main_window_close(wxCloseEvent &event) {
   QuickTodo to_do;
   to_do.write_todos_on_disk("tasks.txt", todos);
   event.Skip();
 }
 
+/***
+ * function to handle the checkbox checked event in the listbox
+ */
 void MainFrame::on_todo_checklistbox_checked(wxCommandEvent &event) {
   if (display_todos->IsChecked(event.GetInt())) {
     todos[event.GetInt()].update_task_completed_field(event.GetInt(), true);
   } else {
     todos[event.GetInt()].update_task_completed_field(event.GetInt(), false);
   }
+}
+
+/***
+ * Function to set the text for the title and description
+ * based on the selected item from the list
+ */
+void MainFrame::on_todo_checklist_mouse_selected(wxMouseEvent &event) {
+  const unsigned int index = display_todos->GetSelection();
+  display_title->SetLabel("Title: " + todos[index].get_title());
+  display_description->SetLabel("Description: " +
+                                todos[index].get_description());
+  display_description->Wrap(20);
+  event.Skip();
 }

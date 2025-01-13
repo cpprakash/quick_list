@@ -17,6 +17,7 @@ public:
   QuickTodo(const unsigned int id, const std::string &title,
             const bool completed, const std::string &description);
   const std::string &get_title(void);
+  const std::string &get_description(void);
   const bool get_completed(void);
   const unsigned int get_size(void);
   void write_todos_on_disk(const std::string &file_name,
