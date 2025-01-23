@@ -39,9 +39,9 @@ void MainFrame::create_gui_controls(void) {
 
   /** adding two static texts to display the info about selected todo */
   display_title = new wxStaticText(
-      panel, wxID_ANY, "Title: ", wxPoint(320, 220), wxSize(100, 40));
+      panel, wxID_ANY, "Title: ", wxPoint(320, 220), wxSize(395, 40));
   display_description = new wxStaticText(
-      panel, wxID_ANY, "Description: ", wxPoint(320, 320), wxSize(100, 300),
+      panel, wxID_ANY, "Description: ", wxPoint(320, 320), wxSize(395, 300),
       wxTE_READONLY || wxTE_MULTILINE || wxTE_RICH || wxHSCROLL);
 
   load_todos_from_file_at_program_start();
@@ -124,6 +124,6 @@ void MainFrame::on_todo_checklist_mouse_selected(wxMouseEvent &event) {
   display_title->SetLabel("Title: " + todos[index].get_title());
   display_description->SetLabel("Description: " +
                                 todos[index].get_description());
-  display_description->Wrap(20);
+  // display_description->Wrap(20);
   event.Skip();
 }
