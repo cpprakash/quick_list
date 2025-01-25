@@ -78,10 +78,10 @@ void MainFrame::create_gui_controls(void) {
       new wxCheckListBox(this, wxID_ANY, wxPoint(10, 10), wxSize(200, 350));
 
   /** adding two static texts to display the info about selected todo */
-  display_title = new wxStaticText(this, wxID_ANY, "Title: ", wxPoint(220, 10),
+  display_title = new wxStaticText(this, wxID_ANY, "Title: ", wxPoint(200, 10),
                                    wxSize(500, 40));
   display_description = new wxStaticText(
-      this, wxID_ANY, "Description: ", wxPoint(220, 60), wxSize(500, 500),
+      this, wxID_ANY, "Description: ", wxPoint(220, 60), wxSize(500, 300),
       wxTE_READONLY || wxTE_MULTILINE || wxTE_RICH || wxHSCROLL);
 
   button_clear_todos = new wxButton(this, wxID_ANY, "Clear TODOs",
