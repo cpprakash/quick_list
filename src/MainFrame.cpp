@@ -5,7 +5,8 @@
 #include "../headers/MainFrame.hpp"
 #include "../headers/QuickTodo.hpp"
 
-MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "TODO Quick List") {
+MainFrame::MainFrame()
+    : wxFrame(nullptr, wxID_ANY, "TODO Quick List", wxPoint(0, 0)) {
   create_gui_controls();
   button_add->Bind(wxEVT_BUTTON, &MainFrame::on_add_todo_button_click, this);
   button_clear_todos->Bind(wxEVT_BUTTON,
@@ -18,35 +19,78 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "TODO Quick List") {
   this->Bind(wxEVT_CLOSE_WINDOW, &MainFrame::on_main_window_close, this);
   CreateStatusBar();
   SetStatusText("Welcome to this quick todo list.");
+  this->SetMinClientSize(wxSize(800, 600));
+}
+
+void MainFrame::initialize_box_sizers(void) {
+  outer_box_sizer = new wxBoxSizer(wxVERTICAL);
+  display_box_sizer = new wxBoxSizer(
+      wxVERTICAL); // box sizer for 2 things, first row for listbox and title,
+                   // desc, second for the delete all todos button
+  input_box_sizer = new wxBoxSizer(wxVERTICAL);
+  display_list_box_sizer = new wxBoxSizer(wxHORIZONTAL);
+  display_title_description_box_sizer =
+      new wxBoxSizer(wxVERTICAL); // for title and description
+}
+
+void MainFrame::create_box_sizers(void) {
+
+  // add input controls to the input box sizer
+  input_box_sizer->Add(input_title, 0, wxEXPAND | wxALL, 10);
+  input_box_sizer->Add(input_description, 0, wxEXPAND | wxALL, 10);
+  input_box_sizer->Add(button_add, 0, wxALL, 10);
+
+  // add input controls to the input box sizer
+  display_title_description_box_sizer->Add(display_title, 0, wxEXPAND | wxALL,
+                                           10);
+  display_title_description_box_sizer->Add(display_description, 0,
+                                           wxEXPAND | wxALL, 10);
+
+  // add list box controls and title, descirption sizer to the this box sizer
+  display_list_box_sizer->Add(display_todos, 0, wxALL, 10);
+  display_list_box_sizer->Add(display_title_description_box_sizer, 0,
+                              wxEXPAND | wxALL, 10);
+  // Add display related controls to its sizer
+  display_box_sizer->Add(display_list_box_sizer, 0, wxALL, 10);
+  display_box_sizer->Add(button_clear_todos, 0, wxALL, 10);
+
+  outer_box_sizer->Add(input_box_sizer, 1, wxEXPAND | wxALL, FromDIP(10));
+  outer_box_sizer->Add(display_box_sizer, 2, wxEXPAND | wxALL, FromDIP(10));
 }
 
 void MainFrame::create_gui_controls(void) {
-  panel = new wxPanel(this);
-  header = new wxStaticText(panel, wxID_ANY, "TODO List", wxPoint(0, 22),
-                            wxSize(800, -1), wxALIGN_CENTER_HORIZONTAL);
-  header->SetBackgroundColour(*wxBLACK);
 
+  initialize_box_sizers(); // initalize all box sizers
+
+  // input field for title
   input_title =
-      new wxTextCtrl(panel, wxID_ANY, "", wxPoint(100, 80), wxSize(600, 35));
-
+      new wxTextCtrl(this, wxID_ANY, "", wxPoint(10, 80), wxSize(600, 35));
+  // input field for description
   input_description =
-      new wxTextCtrl(panel, wxID_ANY, "", wxPoint(100, 125), wxSize(600, 35),
+      new wxTextCtrl(this, wxID_ANY, "", wxPoint(10, 125), wxSize(600, 35),
                      wxTE_READONLY || wxTE_MULTILINE || wxTE_RICH || wxHSCROLL);
-  button_add = new wxButton(panel, wxID_ANY, "Add TODO", wxPoint(100, 170),
+  // button to add a new todo from above fields
+  button_add = new wxButton(this, wxID_ANY, "Add TODO", wxPoint(10, 170),
                             wxSize(100, 40));
+
+  // displaying a saved todo
   display_todos =
-      new wxCheckListBox(panel, wxID_ANY, wxPoint(100, 220), wxSize(200, 350));
+      new wxCheckListBox(this, wxID_ANY, wxPoint(10, 10), wxSize(200, 350));
 
   /** adding two static texts to display the info about selected todo */
-  display_title = new wxStaticText(
-      panel, wxID_ANY, "Title: ", wxPoint(320, 220), wxSize(395, 40));
+  display_title = new wxStaticText(this, wxID_ANY, "Title: ", wxPoint(220, 10),
+                                   wxSize(500, 40));
   display_description = new wxStaticText(
-      panel, wxID_ANY, "Description: ", wxPoint(320, 320), wxSize(395, 300),
+      this, wxID_ANY, "Description: ", wxPoint(220, 60), wxSize(500, 500),
       wxTE_READONLY || wxTE_MULTILINE || wxTE_RICH || wxHSCROLL);
 
-  load_todos_from_file_at_program_start();
-  button_clear_todos = new wxButton(panel, wxID_ANY, "Clear TODOs",
-                                    wxPoint(100, 580), wxSize(100, 40));
+  button_clear_todos = new wxButton(this, wxID_ANY, "Clear TODOs",
+                                    wxPoint(10, 10), wxSize(100, 40));
+
+  this->create_box_sizers(); // create all box sizers
+  this->SetSizerAndFit(outer_box_sizer);
+  load_todos_from_file_at_program_start(); // load all todos at the program
+                                           // start
 }
 
 /***

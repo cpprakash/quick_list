@@ -6,7 +6,7 @@
 
 bool MainApp::OnInit() {
   MainFrame *mainFrame = new MainFrame();
-  mainFrame->SetClientSize(800, 600);
+  mainFrame->SetClientSize(1000, 800);
   mainFrame->Center();
 
   mainFrame->Show();

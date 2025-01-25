@@ -8,7 +8,6 @@
 
 class MainFrame : public wxFrame {
 private:
-  wxPanel *panel;
   wxStaticText *header;
   wxTextCtrl *input_title;
   wxTextCtrl *input_description;
@@ -18,6 +17,12 @@ private:
 
   wxStaticText *display_title;
   wxStaticText *display_description;
+
+  wxBoxSizer *outer_box_sizer; // outer box sizer
+  wxBoxSizer *display_box_sizer;
+  wxBoxSizer *input_box_sizer;
+  wxBoxSizer *display_list_box_sizer;
+  wxBoxSizer *display_title_description_box_sizer;
 
   std::vector<QuickTodo> todos;
   unsigned int id = 0;
@@ -33,6 +38,8 @@ private:
   void load_todos_from_file_at_program_start(void);
   void on_todo_checklistbox_checked(wxCommandEvent &event);
   void on_todo_checklist_mouse_selected(wxMouseEvent &event);
+  void initialize_box_sizers(void);
+  void create_box_sizers(void);
 };
 
 #endif
