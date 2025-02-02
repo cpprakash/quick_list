@@ -237,7 +237,7 @@ void MainFrame::on_todo_checklist_mouse_selected(wxMouseEvent &event) {
 void MainFrame::on_todo_checklist_double_click(wxMouseEvent &event) {
   wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
   QuickTodo cur_todo = todos[display_todos->GetSelection()];
-  std::cout << cur_todo.get_title();
+
   title_text->ChangeValue(todos[display_todos->GetSelection()].get_title());
   title_desc->ChangeValue(
       todos[display_todos->GetSelection()].get_description());
@@ -269,8 +269,7 @@ void MainFrame::on_button_edit_todo_click(wxCommandEvent &event) {
   wxString title = title_text->GetValue();
   wxString description = title_desc->GetValue();
   QuickTodo cur_todo = todos[display_todos->GetSelection()];
-  std::cout << "New tiel =" << title << std::endl;
-  std::cout << "old todo" << cur_todo.get_title();
+
   if (title.IsEmpty() || description.IsEmpty()) {
     SetStatusText("Please enter the required fields.");
   } else {
@@ -279,7 +278,7 @@ void MainFrame::on_button_edit_todo_click(wxCommandEvent &event) {
     todos[display_todos->GetSelection()].set_description(
         std::string(description.mb_str()));
   }
-  std::cout << "new todo" << cur_todo.get_title();
+
   QuickTodo to_do;
   to_do.write_todos_on_disk("tasks.txt", todos);
 
