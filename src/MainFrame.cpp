@@ -299,6 +299,19 @@ void MainFrame::on_button_edit_cancel_click(wxCommandEvent &event) {
  * click handler to delete the selected todo permanently
  */
 void MainFrame::on_button_delete_single_todo_click(wxCommandEvent &event) {
+  if (display_todos->IsEmpty()) {
+    return;
+  }
+  wxMessageDialog dialog(this, "Delete selected tasks?", "Delete",
+                         wxYES_NO | wxCANCEL);
+  unsigned int result = dialog.ShowModal();
+  if (result == wxID_YES) {
+    todos.erase(todos.begin() + display_todos->GetSelection());
+  }
+  QuickTodo to_do;
+  to_do.write_todos_on_disk("tasks.txt", todos);
+
+  load_todos_from_file_at_program_start();
   restore_controls_after_edit();
   event.Skip();
 }
