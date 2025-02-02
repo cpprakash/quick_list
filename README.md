@@ -12,4 +12,4 @@ and then run the program from build folder
 
 # Screenshot
 1. MainGUI of the Program ![screenshot](images/Screenshot_Main_Window.png)
-2. Basic Update Window ![screenshot](images/Screenshot_Edit_Delete_Window.png.png)
+2. Basic Update Window ![screenshot](images/Screenshot_Edit_Delete_Window.png)
