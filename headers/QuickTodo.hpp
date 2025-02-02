@@ -27,6 +27,10 @@ public:
   std::vector<QuickTodo> get_all_todos(const std::string &file_name);
   void update_task_completed_field(const unsigned int index, const bool value);
 
+  void set_title(std::string title);
+  void set_completed(bool completed);
+  void set_description(std::string description);
+
 private:
   void add_a_todo(const std::string &file_name, const QuickTodo &todo);
   std::vector<QuickTodo> read_binary_file(const std::string &file_name);

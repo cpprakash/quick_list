@@ -25,6 +25,12 @@ const std::string &QuickTodo::get_description(void) {
   return this->m_description;
 }
 
+void QuickTodo::set_title(std::string title) { this->m_title = title; }
+void QuickTodo::set_completed(bool completed) { this->m_completed = completed; }
+void QuickTodo::set_description(std::string description) {
+  this->m_description = description;
+}
+
 void QuickTodo::write_todos_on_disk(const std::string &file_name,
                                     const std::vector<QuickTodo> todo) {
   std::ofstream todo_file;
