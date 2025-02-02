@@ -2,12 +2,19 @@
 #include <string>
 #include <vector>
 
+#include <wx/dialog.h>
+
 #include "../headers/MainFrame.hpp"
 #include "../headers/QuickTodo.hpp"
 
 MainFrame::MainFrame()
     : wxFrame(nullptr, wxID_ANY, "TODO Quick List", wxPoint(0, 0)) {
   create_gui_controls();
+  /**
+   * hide edit controls
+   */
+  edit_panel->Hide();
+
   button_add->Bind(wxEVT_BUTTON, &MainFrame::on_add_todo_button_click, this);
   button_clear_todos->Bind(wxEVT_BUTTON,
                            &MainFrame::on_clear_todos_button_click, this);
@@ -15,6 +22,15 @@ MainFrame::MainFrame()
                       &MainFrame::on_todo_checklist_mouse_selected, this);
   display_todos->Bind(wxEVT_CHECKLISTBOX,
                       &MainFrame::on_todo_checklistbox_checked, this);
+  display_todos->Bind(wxEVT_LEFT_DCLICK,
+                      &MainFrame::on_todo_checklist_double_click, this);
+
+  button_edit_todo->Bind(wxEVT_BUTTON, &MainFrame::on_button_edit_todo_click,
+                         this);
+  button_edit_cancel->Bind(wxEVT_BUTTON,
+                           &MainFrame::on_button_edit_cancel_click, this);
+  button_delete_single_todo->Bind(
+      wxEVT_BUTTON, &MainFrame::on_button_delete_single_todo_click, this);
 
   this->Bind(wxEVT_CLOSE_WINDOW, &MainFrame::on_main_window_close, this);
   CreateStatusBar();
@@ -31,6 +47,9 @@ void MainFrame::initialize_box_sizers(void) {
   display_list_box_sizer = new wxBoxSizer(wxHORIZONTAL);
   display_title_description_box_sizer =
       new wxBoxSizer(wxVERTICAL); // for title and description
+
+  edit_todo_sizer =
+      new wxBoxSizer(wxHORIZONTAL); // for edit, cancel and delte button
 }
 
 void MainFrame::create_box_sizers(void) {
@@ -45,6 +64,20 @@ void MainFrame::create_box_sizers(void) {
                                            10);
   display_title_description_box_sizer->Add(display_description, 0,
                                            wxEXPAND | wxALL, 10);
+
+  /* edit_panel->Add(title_text);
+   edit_panel->Add(title_desc);
+   edit_panel->Add(button_edit_todo);
+   edit_panel->Add(button_edit_cancel);
+   edit_panel->Add(button_delete_single_todo);*/
+
+  display_title_description_box_sizer->Add(edit_panel, 0, wxEXPAND | wxALL, 10);
+  /*display_title_description_box_sizer->Add(title_desc, 0, wxEXPAND | wxALL,
+  10); display_title_description_box_sizer->Add(button_edit_todo, 0, wxEXPAND |
+  wxALL, 10); display_title_description_box_sizer->Add(button_edit_cancel, 0,
+                                           wxEXPAND | wxALL, 10);
+  display_title_description_box_sizer->Add(button_delete_single_todo, 0,
+                                           wxEXPAND | wxALL, 10);*/
 
   // add list box controls and title, descirption sizer to the this box sizer
   display_list_box_sizer->Add(display_todos, 0, wxALL, 10);
@@ -82,7 +115,30 @@ void MainFrame::create_gui_controls(void) {
                                    wxSize(500, 40));
   display_description = new wxStaticText(
       this, wxID_ANY, "Description: ", wxPoint(220, 60), wxSize(500, 300),
-      wxTE_READONLY || wxTE_MULTILINE || wxTE_RICH || wxHSCROLL);
+      wxTE_READONLY || wxTE_MULTILINE /*| wxVSCROLL*/);
+
+  edit_panel = new wxPanel(this, wxID_ANY, wxPoint(0, 0), wxSize(600, 350));
+  // edit_panel->SetBackgroundColour(wxColour(122, 233, 0));
+  /**
+   * test code starts
+   */
+  title_text = new wxTextCtrl(edit_panel, wxID_ANY, "<Edit Title>",
+                              wxPoint(0, 0), wxSize(500, 40));
+  title_desc =
+      new wxTextCtrl(edit_panel, wxID_ANY, "<Edit Descriptio>", wxPoint(0, 60),
+                     wxSize(500, 120), wxTE_MULTILINE | wxTE_RICH | wxHSCROLL);
+
+  button_edit_todo = new wxButton(edit_panel, wxID_SAVE, "Save",
+                                  wxPoint(0, 250), wxSize(100, 40));
+
+  button_edit_cancel = new wxButton(edit_panel, wxID_CANCEL, "Cancel",
+                                    wxPoint(110, 250), wxSize(100, 40));
+
+  button_delete_single_todo = new wxButton(edit_panel, wxID_DELETE, "Delete",
+                                           wxPoint(260, 250), wxSize(100, 40));
+  /***
+   * test code ends
+   */
 
   button_clear_todos = new wxButton(this, wxID_ANY, "Clear TODOs",
                                     wxPoint(10, 10), wxSize(100, 40));
@@ -99,6 +155,7 @@ void MainFrame::create_gui_controls(void) {
 void MainFrame::load_todos_from_file_at_program_start(void) {
   QuickTodo todo;
   todos = todo.get_all_todos("tasks.txt");
+  display_todos->Clear();
   for (unsigned int i = 0; i < todos.size(); i++) {
     display_todos->Insert(todos[i].get_title(), display_todos->GetCount());
     if (todos[i].get_completed() == true) {
@@ -157,6 +214,7 @@ void MainFrame::on_todo_checklistbox_checked(wxCommandEvent &event) {
   } else {
     todos[event.GetInt()].update_task_completed_field(event.GetInt(), false);
   }
+  event.Skip();
 }
 
 /***
@@ -169,5 +227,78 @@ void MainFrame::on_todo_checklist_mouse_selected(wxMouseEvent &event) {
   display_description->SetLabel("Description: " +
                                 todos[index].get_description());
   // display_description->Wrap(20);
+  event.Skip();
+}
+
+/***
+ * Function to display the todo to edit
+ * based on the selected item from the list
+ */
+void MainFrame::on_todo_checklist_double_click(wxMouseEvent &event) {
+  wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
+  QuickTodo cur_todo = todos[display_todos->GetSelection()];
+
+  title_text->ChangeValue(todos[display_todos->GetSelection()].get_title());
+  title_desc->ChangeValue(
+      todos[display_todos->GetSelection()].get_description());
+
+  hide_controls_for_edit();
+
+  event.Skip();
+}
+
+void MainFrame::hide_controls_for_edit(void) {
+
+  display_title_description_box_sizer->Hide((unsigned long)0);
+  display_title_description_box_sizer->Hide((unsigned long)1);
+  edit_panel->Show();
+  display_title_description_box_sizer->Layout();
+}
+
+void MainFrame::restore_controls_after_edit(void) {
+  display_title_description_box_sizer->Show((unsigned long)0, true);
+  display_title_description_box_sizer->Show((unsigned long)1, true);
+  edit_panel->Hide();
+  display_title_description_box_sizer->Layout();
+}
+
+/**
+ * click the button to save the edited title and description
+ */
+void MainFrame::on_button_edit_todo_click(wxCommandEvent &event) {
+  wxString title = title_text->GetValue();
+  wxString description = title_desc->GetValue();
+  QuickTodo cur_todo = todos[display_todos->GetSelection()];
+
+  if (title.IsEmpty() || description.IsEmpty()) {
+    SetStatusText("Please enter the required fields.");
+  } else {
+
+    todos[display_todos->GetSelection()].set_title(std::string(title.mb_str()));
+    todos[display_todos->GetSelection()].set_description(
+        std::string(description.mb_str()));
+  }
+
+  QuickTodo to_do;
+  to_do.write_todos_on_disk("tasks.txt", todos);
+
+  load_todos_from_file_at_program_start();
+  restore_controls_after_edit();
+  event.Skip();
+}
+
+/***
+ * click to cancel the edit action
+ */
+void MainFrame::on_button_edit_cancel_click(wxCommandEvent &event) {
+  restore_controls_after_edit();
+  event.Skip();
+}
+
+/***
+ * click handler to delete the selected todo permanently
+ */
+void MainFrame::on_button_delete_single_todo_click(wxCommandEvent &event) {
+  restore_controls_after_edit();
   event.Skip();
 }

@@ -24,6 +24,16 @@ private:
   wxBoxSizer *display_list_box_sizer;
   wxBoxSizer *display_title_description_box_sizer;
 
+  wxBoxSizer *edit_todo_sizer;
+
+  wxTextCtrl *title_text;              // editable text title
+  wxTextCtrl *title_desc;              // editable text desc
+  wxButton *button_edit_todo;          // update the selected todo
+  wxButton *button_edit_cancel;        // cancel the edit operation
+  wxButton *button_delete_single_todo; // delete the selecte todo
+
+  wxPanel *edit_panel;
+
   std::vector<QuickTodo> todos;
   unsigned int id = 0;
 
@@ -40,6 +50,13 @@ private:
   void on_todo_checklist_mouse_selected(wxMouseEvent &event);
   void initialize_box_sizers(void);
   void create_box_sizers(void);
+  void on_todo_checklist_double_click(wxMouseEvent &event);
+
+  void hide_controls_for_edit(void);
+  void restore_controls_after_edit(void);
+  void on_button_edit_todo_click(wxCommandEvent &event);
+  void on_button_edit_cancel_click(wxCommandEvent &event);
+  void on_button_delete_single_todo_click(wxCommandEvent &event);
 };
 
 #endif
