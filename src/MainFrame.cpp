@@ -118,9 +118,9 @@ void MainFrame::create_gui_controls(void) {
       wxTE_READONLY || wxTE_MULTILINE /*| wxVSCROLL*/);
 
   edit_panel = new wxPanel(this, wxID_ANY, wxPoint(0, 0), wxSize(600, 350));
-  // edit_panel->SetBackgroundColour(wxColour(122, 233, 0));
+
   /**
-   * test code starts
+   * controls for edit, delete a task after double click
    */
   title_text = new wxTextCtrl(edit_panel, wxID_ANY, "<Edit Title>",
                               wxPoint(0, 0), wxSize(500, 40));
@@ -136,9 +136,6 @@ void MainFrame::create_gui_controls(void) {
 
   button_delete_single_todo = new wxButton(edit_panel, wxID_DELETE, "Delete",
                                            wxPoint(260, 250), wxSize(100, 40));
-  /***
-   * test code ends
-   */
 
   button_clear_todos = new wxButton(this, wxID_ANY, "Clear TODOs",
                                     wxPoint(10, 10), wxSize(100, 40));
